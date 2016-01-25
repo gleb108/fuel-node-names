@@ -72,7 +72,7 @@ parser.add_argument('-e', '--env', action="store", default=False, dest="env", he
 parser.add_argument('-f', '--file', action="store", default=False, dest="file", help="File to save/restore node names")
 parser.add_argument('-s', '--save node names', action="store_true", dest="save", help="Save node names for the environment")
 parser.add_argument('-r', '--restore', action="store_true", default=False, dest="restore", help="Restore node names  for the environment")
-parser.add_argument('-o', '--omit-hostnames', action="store_true", default=False, dest="omit_hostnames", help="Do NOT update hostnames (use with --restore")
+parser.add_argument('-o', '--omit-hostnames', action="store_true", default=False, dest="omit_hostnames", help="Do NOT update hostnames (use with --restore)")
 
 args = parser.parse_args()
 
