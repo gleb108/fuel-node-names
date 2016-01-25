@@ -6,7 +6,7 @@ import re
 import json
 import argparse
 
-def do (cmd, ignore=False):
+def do (cmd):
     error_code = os.system(cmd)
     if (error_code):
         print "Can't do command:", cmd
@@ -72,11 +72,14 @@ parser.add_argument('-e', '--env', action="store", default=False, dest="env", he
 parser.add_argument('-f', '--file', action="store", default=False, dest="file", help="File to save/restore node names")
 parser.add_argument('-s', '--save node names', action="store_true", dest="save", help="Save node names for the environment")
 parser.add_argument('-r', '--restore', action="store_true", default=False, dest="restore", help="Restore node names  for the environment")
-parser.add_argument('-u', '--update-hostnames', action="store_true", default=False, dest="update_hostnames", help="Update hostnames for the nodes too")
+parser.add_argument('-o', '--omit-hostnames', action="store_true", default=False, dest="omit_hostnames", help="Do NOT update hostnames (use with --restore")
 
 args = parser.parse_args()
 
-env = int(args.env)   
+if args.env:
+   env = int(args.env)   
+else:
+   env = None
 
 if args.file:
    file = args.file
@@ -96,10 +99,12 @@ if args.restore:
             cmd = "curl -si -H 'X-Auth-Token:{0}'  -H 'Content-Type: application/json' -X PUT -d '{1}' http://localhost:8000/api/nodes/{2}".format(token, json, node_id)
             print cmd
             do(cmd)
-            json = '{"hostname":' + '"{0}"'.format(node_name) + '}'
-            cmd = "curl -si -H 'X-Auth-Token:{0}'  -H 'Content-Type: application/json' -X PUT -d '{1}' http://localhost:8000/api/nodes/{2}".format(token, json, node_id)
-            print cmd
-            do(cmd)
+            if not args.omit_hostnames: 
+                json = '{"hostname":' + '"{0}"'.format(node_name) + '}'
+                cmd = "curl -si -H 'X-Auth-Token:{0}'  -H 'Content-Type: application/json' -X PUT -d '{1}' http://localhost:8000/api/nodes/{2}".format(token, json, node_id)
+                print cmd
+                do(cmd)
+
      
 if args.save:
     nodename = get_fuel_nodenames(env)
