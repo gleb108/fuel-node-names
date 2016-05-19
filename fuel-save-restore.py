@@ -33,6 +33,7 @@ def get_networks(env_id=False):
 def yaml_store(data, filename):
     file = open(filename, 'w+')
     file.write(yaml.safe_dump(data))
+    print "Backup is stored to {0}".format(filename)
     file.close()
 
 
@@ -64,6 +65,9 @@ def restore_nodes(env_id, data):
         for saved_node in data:
             if node['mac'] == saved_node['mac']:
                 print(node['mac'])
+                if args.update_hostnames and saved_node['name'] != saved_node['hostname']:
+                    saved_node['hostname'] = saved_node['name']
+                    print "hostname => {0}".format(saved_node['hostname'])
                 nodecl.update(node['id'], **{k: saved_node[k] for k in safe_keys})
 
 
@@ -71,7 +75,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument('-e', '--env', action="store", default=False, type=int, dest="env", help="Specify the environment id")
 parser.add_argument('-f', '--file', action="store", dest="filename", default='envbackup.yaml', help="File to save/restore node names")
 parser.add_argument('-r', '--restore', action="store_true", default=False, dest="restore", help="Restore nodes and networks for the environment")
-
+parser.add_argument('-u', '--update-hostnames', action="store_true", default=False, dest="update_hostnames", help="Update hostnames in accordance with names")
 
 args = parser.parse_args()
 
