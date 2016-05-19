@@ -11,4 +11,3 @@ One more use case: update all the hostnames in accordance with the names.
 
 See fuel-node-names.py --help for options
 
-
