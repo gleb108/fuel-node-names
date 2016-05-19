@@ -1,14 +1,14 @@
-# fuel-node-names
+# fuel-save-restore
 
-Fuel deletes all node names (and hostnames) if environment is reset or deleted.
+Fuel loses all the information about node names (and hostnames) if environment is reset or deleted.
 
-This script can save and restore names and hostnames.
+This script can save and restore some information (node names and hostnames and network settings).
 It uses node's MAC address in fuel-admin network as unique node ID.
 
-You can save node names to JSON file and then use this file as source of information to restore all the node names.
+You can save your settings to JSON file and then use this file as source of information to restore.
 
-One more use case: update all the hostnames in accordance with the names.
+One more use case: update all the hostnames in accordance with the names. 
 
-See fuel-node-names.py --help for options
+See fuel-save-restore.py --help for options
 
 
