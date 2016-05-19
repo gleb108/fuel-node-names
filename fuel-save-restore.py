@@ -16,7 +16,7 @@ def get_nodes(env_id=False):
         return data
 
 def get_env(env_id=False):
-    if envid:
+    if env_id:
         return envcl.get_by_id(env_id)
     else:
         return envcl.get_all()
