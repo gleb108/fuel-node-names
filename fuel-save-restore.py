@@ -50,15 +50,18 @@ def backup_env(env_id):
     return {'nodes':nodes, 'networks':networks}
 
 def restore_networks(env_id, data):
+    print "Restore Networks"
     networks = get_networks(env_id)
     safe_keys = ['cidr', 'gateway', 'meta']
     for net in networks:
+        print(net['name'])
         for saved_net in data:
             if net['name'] == saved_net['name']:
                 netcl.update(net['id'], **{k: saved_net[k] for k in safe_keys})
 
 
 def restore_nodes(env_id, data):
+    print "Restore Nodes"
     nodes = get_nodes(env_id)
     safe_keys = ['hostname', 'labels', 'name']
     for node in nodes:
@@ -74,16 +77,29 @@ def restore_nodes(env_id, data):
 parser = argparse.ArgumentParser()
 parser.add_argument('-e', '--env', action="store", default=False, type=int, dest="env", help="Specify the environment id")
 parser.add_argument('-f', '--file', action="store", dest="filename", default='envbackup.yaml', help="File to save/restore node names")
-parser.add_argument('-r', '--restore', action="store_true", default=False, dest="restore", help="Restore nodes and networks for the environment")
+parser.add_argument('-s', '--save', action="store_true", default=False, dest="save", help="Save nodes and networks data")
+parser.add_argument('--restore-nodes', action="store_true", default=False, dest="restore_nodes", help="Restore only nodes for the environment")
+parser.add_argument('--restore-networks', action="store_true", default=False, dest="restore_networks", help="Restore only networks for the environment")
+parser.add_argument('-r', '--restore', action="store_true", default=False, dest="restore", help="Restore all nodes and networks for the environment")
 parser.add_argument('-u', '--update-hostnames', action="store_true", default=False, dest="update_hostnames", help="Update hostnames in accordance with names")
 
 args = parser.parse_args()
 
 
 if args.restore:
+    args.save = False
+    args.restore_nodes = True
+    args.restore_networks = True
+
+if args.restore_nodes or args.restore_networks:
     data = yaml_load(args.filename)
+
+if args.restore_nodes:
     restore_nodes(args.env, data['nodes'])
+
+if args.restore_networks:
     restore_networks(args.env, data['networks'])
-else:
+
+if args.save:
     yaml_store(backup_env(args.env), args.filename)
 
