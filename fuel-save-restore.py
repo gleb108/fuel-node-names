@@ -76,7 +76,7 @@ def restore_nodes(env_id, data):
 
 parser = argparse.ArgumentParser()
 parser.add_argument('-e', '--env', action="store", default=False, type=int, dest="env", help="Specify the environment id")
-parser.add_argument('-f', '--file', action="store", dest="filename", default='envbackup.yaml', help="File to save/restore node names")
+parser.add_argument('-f', '--file', action="store", dest="filename", default='backup.yaml', help="File to save/restore node names")
 parser.add_argument('-s', '--save', action="store_true", default=False, dest="save", help="Save nodes and networks data")
 parser.add_argument('--restore-nodes', action="store_true", default=False, dest="restore_nodes", help="Restore only nodes for the environment")
 parser.add_argument('--restore-networks', action="store_true", default=False, dest="restore_networks", help="Restore only networks for the environment")
@@ -101,5 +101,9 @@ if args.restore_networks:
     restore_networks(args.env, data['networks'])
 
 if args.save:
-    yaml_store(backup_env(args.env), args.filename)
+    if (args.env and args.filename == 'backup.yaml'):
+       filename = "backup-env-{0}.yaml".format(args.env)
+    else:
+       filename = args.filename 
+    yaml_store(backup_env(args.env), filename)
 
