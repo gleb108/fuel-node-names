@@ -71,6 +71,7 @@ def restore_nodes(env_id, data):
                 if args.update_hostnames and saved_node['name'] != saved_node['hostname']:
                     saved_node['hostname'] = saved_node['name']
                     print "hostname => {0}".format(saved_node['hostname'])
+                else safe_keys.remove('hostname')
                 nodecl.update(node['id'], **{k: saved_node[k] for k in safe_keys})
 
 
